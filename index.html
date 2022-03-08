@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
+  <title>Chandra Ramanujan</title>
+  <meta property="og:title" content="Chandra Ramanujan" />
+  <meta name="author" content="Chandra Ramanujan" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="description" content="Chandra's blog" />
+  <meta property="og:site_name" content="Chandra Ramanujan" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="twitter:title" content="Chandra Ramanujan" />
+  <!-- End Jekyll SEO tag -->
+
+  <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="page-content" aria-label="Content">
+    <div class="wrapper">
+
+      <article id="pageContent" class="post h-entry animated fadeInUp" itemscope itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+          <h1 id="title" class="post-title p-name" itemprop="name headline">
+            <span id="htmlTitle">Chandra Ramanujan</span>
+          </h1>
+          <div id="htmlSubtitle" class="sub-title">
+            <p>Hello! My name is Chandra. I am currently designing for SE Asia's MSME ecosystem at Gojek.</p>
+            <p>I previously worked at Obvious & Kantar.</p>
+
+            <div class="social-links">
+              <ul class="social-media-list">
+                <li>
+                  <a href="https://www.linkedin.com/in/chandrasekharn/" title="LinkedIn">
+                    <svg class="svg-icon grey">
+                      <use xlink:href="/assets/minima-social-icons.svg#linkedin">
+                      </use>
+                    </svg>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/NCResq" title="Twitter">
+                    <svg class="svg-icon grey">
+                      <use xlink:href="/assets/minima-social-icons.svg#twitter">
+                      </use>
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </header>
+        <div id="htmlBody" class="post-content e-content" itemprop="articleBody"></div>
+      </article>
+      
+      <script type="module">
+  
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js";
+      import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+      import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
+  
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+  
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  
+      const firebaseConfig = {
+        apiKey: "AIzaSyADqh0jCj75bRNnOJ-Bds0Y9mucyNOtvxY",
+        authDomain: "peatothebee-f83e0.firebaseapp.com",
+        databaseURL: "https://peatothebee-f83e0-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "peatothebee-f83e0",
+        storageBucket: "peatothebee-f83e0.appspot.com",
+        messagingSenderId: "304812390369",
+        appId: "1:304812390369:web:9d37bcc4c58c5b978644a0"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getDatabase();
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      const user = auth.currentUser;
+  
+      const reference = ref(db, 'posts');
+  
+      var vdisplayname = "";
+      var vphotourl = "";
+      var numposts = 0;
+
+
+      // One time run
+        onValue(reference, (snapshot) => {
+
+          snapshot.forEach((postSnapshot) => {
+            const postKey = postSnapshot.key;
+            const postData = postSnapshot.val();
+
+            var thisCode = "<div class='post-container animated fadeInUp'>" +
+              "<h3 class='post-title'>" + "<a href='/" + postKey + "'>" + postData.title + "</a></h3>" +
+              "<p class='post-subtitle'>" + postData.subtitle + "</p>" +
+              "</div>";
+
+          document.getElementById('htmlBody').innerHTML += thisCode;
+          numposts++;
+          });
+
+          const collection = document.getElementsByClassName("post-container");
+          for (let i = 0; i < collection.length; i++) {
+            collection[i].style.animationDelay = ( i * 60 ) + 'ms';
+          }
+
+  
+        });
+
+
+  
+        // check if logged in
+        getUserDetails();
+  
+      function signInUser() {
+        console.log("Trying to sign in...")
+        signInWithRedirect(auth, provider);
+      }
+  
+      function showUserOnPage() {
+        document.getElementById('containerOfUser').classList.remove('displaynone');
+        document.getElementById('photoOfUser').src = vphotourl;
+        document.getElementById('nameOfUser').innerHTML = vdisplayname;
+        vlogin.classList.add('displaynone');
+      }
+  
+      function getUserDetails() {
+        console.log("Trying to get user details...");
+  
+        const auth = getAuth();
+
+  getRedirectResult(auth)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access Google APIs.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+  
+      console.log(credential);
+      console.log(token);
+  
+      // The signed-in user info.
+      const user = result.user;
+      console.log(user);
+      console.log("i think you are " + user.displayName);
+      vdisplayname = user.displayName;
+      vphotourl = user.photoURL;
+      showUserOnPage();
+      
+    }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+  
+      }
+  
+      </script>
+    </div>
+  </main>
+
+<img class="footer-img mobile-only light-only" src="assets/chandra-footer-light.jpg" alt="">
+<img class="footer-img mobile-only dark-only" src="assets/chandra-footer-dark.jpg" alt="">
+
+<footer class="site-footer h-card">
+  <data class="u-url" href="/">
+  </data>
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col one-half">
+        <h2 class="footer-heading">Chandra Ramanujan</h2>
+        <ul class="contact-list">
+          <p>Made with love, 2022</p>
+          <!-- <li class="p-name">Chandra Ramanujan</li><li><a class="u-email" href="mailto:hello@gyanl.com">hello@gyanl.com</a></li>-->
+        </ul>
+      </div>
+      <div class="footer-col one-half">
+        <h2 class="footer-heading"></h2>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>
