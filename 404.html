@@ -153,6 +153,10 @@
   
       var actionbar = document.getElementsByClassName("pell-actionbar")[0];
       
+      // Dont't allow editing of post body
+      vbody.contentEditable = "false";
+
+
       // One time run
         onValue(reference, (snapshot) => {
   
@@ -178,7 +182,6 @@
           }
   
        // Stop showing loader and show content
-          vbody.contentEditable = "false";
           document.getElementById("pageContent").classList.remove('displaynone');
         });
   
@@ -288,9 +291,12 @@
   
       }
 
-
       // Add event listeners
       vlogin.addEventListener("click", signInUser);
+
+
+
+
       </script>
     </div>
   </main>
