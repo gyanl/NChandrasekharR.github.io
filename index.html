@@ -118,12 +118,21 @@
             const postKey = postSnapshot.key;
             const postData = postSnapshot.val();
 
-            var thisCode = "<div class='post-container animated fadeInUp'>" +
+            var visibleCode = "<div class='post-container animated fadeInUp'>" +
               "<h3 class='post-title'>" + "<a href='/" + postKey + "'>" + postData.title + "</a></h3>" +
               "<p class='post-subtitle'>" + postData.subtitle + "</p>" +
               "</div>";
 
-          document.getElementById('htmlBody').innerHTML += thisCode;
+            var hiddenCode = "<div class='post-container animated fadeInUp hidden-article'>" +
+              "<h3 class='post-title'>" + "<a href='/" + postKey + "'>" + postData.title + "</a></h3>" +
+              "<p class='post-subtitle'>" + postData.subtitle + "</p>" +
+              "</div>";
+
+            if (postData.feed == "published") {
+                document.getElementById('htmlBody').innerHTML += visibleCode;
+              }
+            else document.getElementById('htmlBody').innerHTML += hiddenCode;
+
           numposts++;
           });
 
@@ -150,6 +159,13 @@
         document.getElementById('photoOfUser').src = vphotourl;
         document.getElementById('nameOfUser').innerHTML = vdisplayname;
         vlogin.classList.add('displaynone');
+      }
+
+      function showUnpublished() {
+        const unpubs = document.getElementsByClassName("post-container");
+          for (let i = 0; i < collection.length; i++) {
+            unpubs[i].style.display = "visible";
+          }
       }
   
       function getUserDetails() {

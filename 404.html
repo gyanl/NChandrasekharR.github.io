@@ -146,6 +146,8 @@
       var vsubtitle = document.getElementById('htmlSubtitle');
       var vbody = document.getElementsByClassName("pell-content")[0];
       var vlogin = document.getElementById("logmein");
+      var vtogglefeed = document.getElementById("togglefeed");
+      var vdeletepage = document.getElementById("deletepage");
   
       var vdisplayname = "";
       var vphotourl = "";
@@ -166,18 +168,21 @@
             vtitle.innerHTML = snapshot.val().title;
             vsubtitle.innerHTML = snapshot.val().subtitle;
             vbody.innerHTML = snapshot.val().body;
+            vtogglefeed.innerHTML = snapshot.val().feed;
           } else {
           // If no snapshot, fill values and create record.
             console.log("Creating new record.");
             vtitle.innerHTML = pageName;
             vbody.innerHTML = "Write something epic.<br><br><br><br><br><br><br>";
             vbody.style.opacity = "0.5";
+            vtogglefeed.innerHTML = "published";
   
       // Create new log
             set(ref(db, 'posts/' + pageName), {
               title: vtitle.innerHTML,
               subtitle: vsubtitle.innerHTML,
-              body : vbody.innerHTML
+              body : vbody.innerHTML,
+              feed : vtogglefeed.innerHTML
             });
           }
   
@@ -195,7 +200,8 @@
         updates['posts/' + pageName + "/"] = {
           title: vtitle.innerHTML,
           subtitle: vsubtitle.innerHTML,
-          body: vbody.innerHTML
+          body: vbody.innerHTML,
+          feed: vtogglefeed.innerHTML
         };
         update(ref(db), updates);
         console.log("Update sent");
@@ -215,6 +221,20 @@
         signInWithRedirect(auth, provider);
       }
   
+      function toggleFeedStatus() {
+        console.log("Toggling feed status...");
+        if (vtogglefeed.innerHTML == "published"){
+          vtogglefeed.innerHTML = "hidden";
+        }
+        else vtogglefeed.innerHTML = "published";
+        updateValues();
+      }
+
+      function deleteThisPage() {
+        console.log("Deleting this page...");
+        window.location = "index.html";
+      }
+
       function showUserOnPage() {
 
         // Show user chip
@@ -277,6 +297,10 @@
             vphotourl = user.photoURL;
             vemail = user.email;
             showUserOnPage();
+
+            // Show delete and unfeed
+            // vdeletepage.classList.remove('displaynone');
+            vtogglefeed.classList.remove('displaynone');
             
           }).catch((error) => {
             // Handle Errors here.
@@ -293,6 +317,8 @@
 
       // Add event listeners
       vlogin.addEventListener("click", signInUser);
+      vtogglefeed.addEventListener("click", toggleFeedStatus);
+      vdeletepage.addEventListener("click", deleteThisPage);
 
 
 
@@ -316,6 +342,8 @@
         <div class="footer-col one-half">
           <h2 class="footer-heading"></h2>
           <button class="loginbutton" type="button" id="logmein">Log in and Edit</button>
+          <button class="loginbutton displaynone" type="button" id="togglefeed">...</button>
+          <button class="loginbutton redbutton displaynone" type="button" id="deletepage">Delete</button>
           <div class="logincontainer">
             <div id="containerOfUser" class="usercontainer displaynone">
               <img class="userphoto" src="" id="photoOfUser">
