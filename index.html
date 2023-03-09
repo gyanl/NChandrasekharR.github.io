@@ -128,10 +128,10 @@
               "<p class='post-subtitle'>" + postData.subtitle + "</p>" +
               "</div>";
 
-            if (postData.feed != "hidden") {
-                document.getElementById('htmlBody').innerHTML += visibleCode;
+            if (postData.feed == "hidden") {
+                document.getElementById('htmlBody').innerHTML += hiddenCode;
               }
-            else document.getElementById('htmlBody').innerHTML += hiddenCode;
+            else document.getElementById('htmlBody').innerHTML += visibleCode;
 
           numposts++;
           });
