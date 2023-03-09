@@ -128,7 +128,7 @@
               "<p class='post-subtitle'>" + postData.subtitle + "</p>" +
               "</div>";
 
-            if (postData.feed == "published") {
+            if (postData.feed != "hidden") {
                 document.getElementById('htmlBody').innerHTML += visibleCode;
               }
             else document.getElementById('htmlBody').innerHTML += hiddenCode;
