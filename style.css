@@ -1,11 +1,11 @@
 html{
-  --background-color: #fff4ed;
+  --background-color: #f4f6f9;
   --foreground-color: #240909;
   --text-color-dark: #052840;
   --text-color: #02395E;
   --text-color-light: #999;
   --accent-color-dark: #940f0f;
-  --accent-color: #fd4a4a;
+  --accent-color: #20519a;
   --accent-color-light: rgb(0 22 216 / 10%);
   --overlay-color: rgba(255, 255, 255, .8);
   --overlay-edge-color: rgba(0, 0, 0, .08)
@@ -335,7 +335,7 @@ color:var(--text-color-dark)
 }
 @media screen and (min-width: 800px){
 .post-content h1,.post-title{
-    font-size:36px
+    font-size:28px
 }
 }
 .post-content a{
