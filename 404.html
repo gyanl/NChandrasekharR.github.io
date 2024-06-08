@@ -115,7 +115,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
-        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
+        import { getAuth, signInWithPopup, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
 
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
@@ -217,10 +217,22 @@
           actionbar.classList.add("hidden");
         }
 
-        function signInUser() {
-          console.log("Trying to sign in...")
-          signInWithRedirect(auth, provider);
+        // function signInUser() {
+        //   console.log("Trying to sign in...")
+        //   signInWithRedirect(auth, provider);
+        // }
+
+        async function signInUser() {
+          console.log("Trying to sign in...");
+          try {
+            const userCred = await signInWithPopup(auth, new GoogleAuthProvider());
+            console.log("User signed in:", userCred.user);
+            getUserDetails();
+          } catch (error) {
+            console.error("Error signing in:", error);
+          }
         }
+        
 
         function toggleFeedStatus() {
           console.log("Toggling feed status...");
@@ -279,40 +291,20 @@
         function getUserDetails() {
           console.log("Trying to get user details...");
 
-          const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    console.log("User is signed in:", user);
+    vdisplayname = user.displayName;
+    vphotourl = user.photoURL;
+    vemail = user.email;
+    showUserOnPage();
 
-          getRedirectResult(auth)
-            .then((result) => {
-              // This gives you a Google Access Token. You can use it to access Google APIs.
-              const credential = GoogleAuthProvider.credentialFromResult(result);
-              const token = credential.accessToken;
-
-              console.log(credential);
-              console.log(token);
-
-              // The signed-in user info.
-              const user = result.user;
-              console.log(user);
-              console.log("i think you are " + user.displayName);
-              vdisplayname = user.displayName;
-              vphotourl = user.photoURL;
-              vemail = user.email;
-              showUserOnPage();
-
-              // Show delete and unfeed
-              // vdeletepage.classList.remove('displaynone');
-              vtogglefeed.classList.remove('displaynone');
-
-            }).catch((error) => {
-              // Handle Errors here.
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              // The email of the user's account used.
-              const email = error.email;
-              // The AuthCredential type that was used.
-              const credential = GoogleAuthProvider.credentialFromError(error);
-              // ...
-            });
+    // Show delete and unfeed
+    // vdeletepage.classList.remove('displaynone');
+    vtogglefeed.classList.remove('displaynone');
+  } else {
+    console.log("No user is currently signed in.");
+  }
 
         }
 
